@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>我的音乐网</title>
+
+    <!-- favicon图标 -->
+    <link rel="icon" href="images/favicon.ico">
+
+    <!-- jQuery文件 -->
+    <script src="js/jquery.min.js"></script>
+
+    <!-- 播放器样式表文件 -->
+    <link rel="stylesheet" type="text/css" href="css/player.css">
+
+    <!-- 滚动条美化样式文件 -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.mCustomScrollbar.min.css">
+
+    <!-- layer弹窗插件样式文件 -->
+    <link rel="stylesheet" href="plugns/layer/skin/default/layer.css?v=3.0.2302" id="layuicss-skinlayercss">
+</head>
+<body>
+
+<div id="blur-img"></div>
+
+<!-- 头部logo -->
+<div class="header">
+    <div class="logo">
+        HJTPlayer
+    </div>
+</div>  <!--class="header"-->
+
+<!-- 中间主体区域 -->
+<div class="center">
+    <div class="container">
+        <div class="btn-bar">
+            <!-- tab按钮区 -->
+            <div class="btn-box" id="btn-area">
+                <span class="btn" data-action="player" hidden>播放器</span>
+                <span class="btn" data-action="playing" title="正在播放列表">正在播放</span>
+                <span class="btn" data-action="sheet" title="音乐播放列表">播放列表</span>
+                <span class="btn" id="preview" title="上一页">上一页</span>
+                <span class="btn" id="next" title="下一页">下一页</span>
+                <span class="btn" data-action="search" title="点击搜索音乐">歌曲搜索</span>
+            </div>
+        </div>  <!--class="btn-bar"-->
+
+        <div class="data-area">
+            <!--歌曲歌单-->
+            <div id="sheet" class="data-box" hidden></div>
+
+            <!--音乐播放列表-->
+            <div id="main-list" class="music-list data-box">
+            	<div class="list-item list-head">
+			        <span class="music-album">
+			            	专辑
+			        </span>
+			        <span class="auth-name">
+			            	歌手
+			        </span>
+			        <span class="music-cz">
+			            	操作
+			        </span>
+			        <span class="music-name">
+			            	歌曲
+			        </span>
+			    </div>
+                <!--jsrender-->
+                <script type="text/x-jsrender" id="musicdata">
+                    <div class="list-item moban" ondblclick="dbplay(this)">
+				   	<input type="hidden" name="rid" value="{{:id}}" />
+				   	<input type="hidden" value="" />
+				    <span class="list-mobile-menu"></span>
+				    <span class="music-album">  {{:album_name}}  </span>
+				    <span class="auth-name">  {{:artist_name}}  </span>
+				    <span class="music-cz">
+				        <img src="images/download.png" onclick="download({{:id}},'{{:artist_name}}','{{:name}}')" title="点击下载" class="download"/>
+				        &nbsp;&nbsp;
+				        <img src="images/add.png" title="添加至播放列表" class="addmusic" onclick="addList($(this).parents('.moban')[0])"/>
+				    </span>
+				    <span class="music-name">  {{:name}}  </span>
+				</div>
+                </script>
+
+            </div>
+        </div>  <!--class="data-area"-->
+
+        <!-- 右侧封面及歌词展示 -->
+        <div class="player" id="player">
+            <!--歌曲封面-->
+            <div class="cover">
+                <img src="images/player_cover.png" class="music-cover" id="music-cover">
+            </div>
+            <!--滚动歌词-->
+            <div class="lyric">
+                <ul id="lyric">
+
+                </ul>
+            </div>
+        </div>
+    </div>  <!--class="container"-->
+</div>  <!--class="center"-->
+
+<!-- 播放器底部区域 -->
+<div class="footer">
+    <div class="container">
+        <div class="con-btn">
+            <a href="javascript:;" class="player-btn btn-prev" title="上一首"></a>
+            <a href="javascript:;" class="player-btn btn-play" title="暂停/继续"></a>
+            <a href="javascript:;" class="player-btn btn-next" title="下一首"></a>
+        </div>  <!--class="con-btn"-->
+
+        <div class="vol">
+            <div class="quiet">
+                <a href="javascript:;" class="player-btn btn-quiet" title="静音"></a>
+            </div>
+            <div class="volume">
+                <div class="volume-box">
+                    <input id="volumn" type="range" min="0" max="100" value="70" />
+                </div>
+            </div>
+        </div>  <!--class="footer"-->
+
+        <div class="progress">
+            <div class="progress-box"> 
+            	<span id="musicname">
+            		<marquee scrollamount="3"></marquee>
+            	</span>
+                <input id="state" type="range" min="1" max="100" value="1" />
+            </div>
+        </div>  <!--class="progress"-->
+    </div>  <!--class="container"-->
+</div>  <!--class="footer"-->
+
+<!-- layer弹窗插件 -->
+<script src="plugns/layer/layer.js"></script>
+<!--渲染模板js-->
+<script src="js/jsrender.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- 播放器主体功能模块 -->
+<script src="js/player.js"></script>
+
+<!-- 滚动条美化插件 -->
+<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<!-- 背景模糊化插件 -->
+<script src="js/background-blur.min.js"></script>
+
+<!--搜索-->
+<div id="sousuo" style="display: none;">
+	<form id="search">
+		<div class="search-group" style="padding: 20px 10px;">
+			<input type="text" name="key" id="search-wd"  autocomplete="off" placeholder="搜索歌手、歌名、专辑" autofocus required>
+			<button type="submit" class="search-submit">搜 索</button>
+		</div>
+	</form>
+</div>
+
+<!--播放列表-->
+<div id="playlist" style="display: none;">
+	<ul>
+
+	</ul>
+</div>
+
+<!--播放器-->
+<audio id="bfq" style="display: none;" controls></audio>
+</body>
+</html>
